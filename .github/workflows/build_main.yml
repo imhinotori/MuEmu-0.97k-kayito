@@ -1,0 +1,25 @@
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
+      - name: Build Release
+        run: msbuild Source/Client/Client.sln /p:Configuration=Release /p:Platform=Win32
+
+      - name: Upload Main Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Main.dll
+          path: Source/Client/bin/Release/Main/Main.dll

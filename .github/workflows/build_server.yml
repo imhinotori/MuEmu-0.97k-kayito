@@ -1,0 +1,43 @@
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
+      - name: Build Release (MySQL) x86
+        run: msbuild Source/MuServer/MuServer_Ex097.sln /m /p:Configuration=Release_MySQL /p:Platform=Win32
+
+      - name: Upload ConnectServer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ConnectServer.exe
+          path: Source/MuServer/bin/Release/ConnectServer/ConnectServer.exe
+
+      - name: Upload DataServer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DataServer.exe
+          path: Source/MuServer/bin/Release/MYSQL/DataServer/DataServer.exe
+
+      - name: Upload GameServer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameServer.exe
+          path: Source/MuServer/bin/Release/GameServer/GameServer.exe
+
+      - name: Upload JoinServer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JoinServer.exe
+          path: Source/MuServer/bin/Release/MYSQL/JoinServer/JoinServer.exe
